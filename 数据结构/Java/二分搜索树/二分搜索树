@@ -1,1 +1,236 @@
+public class BSTree<A extends Comparable<A>> {
 
+    private class Node{
+        Node left , right ;
+        A a ;
+        public Node(A a){
+            this.a = a ;
+            left = null ;
+            right = null ;
+        }
+        public String toString(){
+            return a.toString() ;
+        }
+    }
+
+    private Node root ;
+    private int size ;
+
+    public BSTree(){
+        root = null ;
+        size = 0 ;
+    }
+
+    public int getSize(){
+        return size ;
+    }
+
+    public boolean isEmpty(){
+        return size == 0 ;
+    }
+
+    public void add(A a){
+        root = add(root , a) ;
+    }
+    private Node add(Node node , A a){
+        if (node == null) {
+            size ++ ;
+            return new Node(a);
+        }
+        if (a.compareTo(node.a) < 0)
+            node.left = add(node.left , a) ;
+        else if(a.compareTo(node.a) > 0)
+            node.right = add(node.right , a) ;
+        return node ;
+    }
+
+    public boolean contains(A a){
+        return contains(root , a) ;
+    }
+    private boolean contains(Node node , A a){
+        if (node == null)
+            return false ;
+        if (a.compareTo(node.a) < 0)
+            return contains(node.left , a) ;
+        else if(a.compareTo(node.a) == 0)
+            return true ;
+        else
+            return contains(node.right , a) ;
+    }
+
+    public void preOrder(){
+        preOrder(root);
+    }
+    private void preOrder(Node node){
+        if (node == null)
+            return;
+        System.out.println(node.a);
+        preOrder(node.left);
+        preOrder(node.right);
+    }
+
+    public void preOrder_NR(){
+        Array_Stack<Node> one = new Array_Stack();
+        one.push(root);
+        if (root == null)
+            return;
+        while(!one.isEmpty()){
+            Node node = one.pop() ;
+            System.out.println(node.a);
+            if (node.right != null)
+                one.push(node.right);
+            if (node.left != null)
+                one.push(node.left);
+        }
+    }
+
+    public void inOrder(){
+        inOrder(root);
+    }
+    private void inOrder(Node node){
+        if (node == null)
+            return;
+        inOrder(node.left);
+        System.out.println(node.a);
+        inOrder(node.right);
+    }
+
+    public void sequence_NR(){
+        LoopQueue<Node> one = new LoopQueue<>();
+        if (root == null)
+            return;
+        one.enqueue(root);
+        while(!one.isEmpty()){
+            Node node = one.dequeue();
+            System.out.println(node.a);
+            if (node.left != null)
+                one.enqueue(node.left);
+            if (node.right != null)
+                one.enqueue(node.right);
+        }
+    }
+
+    public A findMin(){
+        Node test = findMin(root) ;
+        return findMin(root).a ;
+    }
+    private Node findMin(Node node){
+        if (node.left == null)
+            return node ;
+        return findMin(node.left) ;
+    }
+
+    public A findMax(){
+        return findMax(root).a ;
+    }
+    private Node findMax(Node node){
+        if (node.right == null)
+            return node ;
+        return findMax(node.right) ;
+    }
+
+    public A removeMin(){
+        if (isEmpty())
+            throw new IllegalArgumentException("BSTree is Empty !") ;
+        Node del = findMin(root) ;
+        root = removeMin(root) ;
+        return del.a ;
+    }
+    private Node removeMin(Node node){
+        if (node.left == null){
+            Node rightNode = node.right ;
+            node.right = null ;
+            size -- ;
+            return rightNode ;
+        }
+        node.left = removeMin(node.left) ;
+        return node ;
+    }
+
+    public A removeMax(){
+        if (isEmpty())
+            throw new IllegalArgumentException("BSTree is Empty!") ;
+        Node del = findMax(root) ;
+        root = removeMax(root) ;
+        return del.a ;
+    }
+    private Node removeMax(Node node){
+        if (node.right == null){
+            Node leftNode = node.left ;
+            node.left = null ;
+            size -- ;
+            return leftNode ;
+        }
+        node.right = removeMax(node.right) ;
+        return node ;
+    }
+
+    public void remove(A a){
+        if (isEmpty())
+            throw new IllegalArgumentException("BSTree is Empty!") ;
+        root = remove(root , a) ;
+    }
+    private Node remove(Node node , A a){
+        if (node == null)
+            return null ;
+        if (a.compareTo(node.a) < 0){
+            node.left = remove(node.left , a) ;
+            return node ;
+        }else if(a.compareTo(node.a) > 0){
+            node.right = remove(node.right , a) ;
+            return node ;
+        }else {
+            if (node.left == null){
+                Node rightNode = node.right ;
+                node.right = null ;
+                size -- ;
+                return rightNode ;
+            }
+            if (node.right == null){
+                Node leftNode = node.left ;
+                node.left = null ;
+                size -- ;
+                return leftNode ;
+            }
+
+            Node successor = findMin(node.right) ;
+            successor.right = removeMin(node.right) ;
+            successor.left = node.left ;
+            node.right = node.left = null ;
+            return successor ;
+        }
+    }
+
+    public String toString(){
+        StringBuilder str = new StringBuilder();
+        haha(root , 0 ,str);
+        return str.toString();
+    }
+    private void haha(Node node , int depth , StringBuilder str){
+        if (node == null){
+            str.append(haha(depth) + "null\n");
+            return;
+        }
+        str.append(haha(depth) + node.a + "\n");
+        haha(node.left , depth+1 , str);
+        haha(node.right , depth+1 , str);
+    }
+    private String haha(int depth){
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < depth; i++) {
+            str.append("--");
+        }
+        return str.toString();
+    }
+
+    public static void main(String[] args) {
+        BSTree<Integer> bst = new BSTree<>();
+        int[] num = {5,3,6,8,4,2,1,0};
+        for (int i : num)
+            bst.add(i);
+        //bst.preOrder();
+        bst.remove(5);
+        System.out.println(bst);
+
+    }
+}
