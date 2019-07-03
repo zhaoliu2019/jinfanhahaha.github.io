@@ -1,0 +1,8 @@
+public interface Stack<A> {
+
+    int getSize() ;
+    boolean isEmpty() ;
+    void push(A a) ;
+    A pop() ;
+    A peek() ;
+}
