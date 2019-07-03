@@ -1,0 +1,129 @@
+import primary.BSTree;
+
+import java.util.Random;
+
+public class MaxHeap_d<A extends Comparable<A>> {
+
+    // d叉堆   此处d == 3
+
+    private Array<A> arr ;
+    public MaxHeap_d(){
+        arr = new Array<>();
+        arr.addLast(null);
+    }
+
+    public int size(){
+        return arr.getSize()-1 ;
+    }
+
+    public boolean isEmpty(){
+        return arr.getSize() == 1 ;
+    }
+
+    private int parent(int i ){
+        if (i == 1)
+            throw new IllegalArgumentException("index-0 doesn't have parent.");
+        return (i+1) / 3 ;
+    }
+
+    private int leftChild(int i ){
+        return i*3-1 ;
+    }
+
+    private int middleChild(int i ){
+        return i*3 ;
+    }
+
+    private int rightChild(int i ){
+        return i*3+1 ;
+    }
+
+    public void add(A a){
+        arr.addLast(a);
+        siftUp(size()) ;
+    }
+    private void siftUp(int i){
+        while(i > 1 && arr.get(i).compareTo(arr.get(parent(i))) > 0){
+            arr.swap(i , parent(i));
+            i = parent(i) ;
+        }
+    }
+
+    private A findMax(){
+        if (isEmpty())
+            throw new IllegalArgumentException("Can not findMax when heap is empty.");
+        return arr.get(1) ;
+    }
+
+    public A extractMax(){
+        A res = findMax() ;
+        arr.swap(1 , size()) ;
+        arr.removeLast() ;
+        siftDown(1) ;
+        return res ;
+    }
+    private int max(int i , int j , int k){
+        if (arr.get(i).compareTo(arr.get(j)) >= 0 && arr.get(i).compareTo(arr.get(k)) >= 0)
+            return i ;
+        else if(arr.get(j).compareTo(arr.get(i)) >= 0 && arr.get(j).compareTo(arr.get(k)) >= 0)
+            return j ;
+        else
+            return k ;
+    }
+
+    private void siftDown(int i ){
+        while (leftChild(i) <= size()){
+            int j = leftChild(i) ;
+            if (j+2 <= size()){
+                j = max(j , j+1 , j+2) ;
+            }else if(j+1 <= size() && arr.get(j).compareTo(arr.get(j+1)) < 0)
+                j ++ ;
+            if (arr.get(j).compareTo(arr.get(i)) < 0)
+                break;
+            arr.swap(j , i);
+            i = j ;
+        }
+    }
+
+    public A replace(A a){
+        A res = findMax() ;
+        arr.set(1 , a);
+        siftDown(1);
+        return res ;
+    }
+
+    public static void main(String[] args) {
+
+        int n = 1000000;
+        double start1 = System.nanoTime() ;
+        MaxHeap_d<Integer> maxHeap = new MaxHeap_d<>();
+        Random random = new Random();
+        for(int i = 0 ; i < n ; i ++)
+            maxHeap.add(random.nextInt(Integer.MAX_VALUE));
+
+        int[] arr = new int[n];
+        for(int i = 0 ; i < n ; i ++)
+            arr[i] = maxHeap.extractMax();
+
+        for(int i = 1 ; i < n ; i ++)
+            if(arr[i-1] < arr[i])
+                throw new IllegalArgumentException("Error");
+        double end1 = System.nanoTime() ;
+        System.out.println("Test MaxHeap completed.");
+        System.out.println("Time: " + (end1-start1)/1000000000);
+        double start2 = System.nanoTime() ;
+        BSTree<Integer> bst = new BSTree<>();
+        for(int i = 0 ; i < n ; i ++)
+            bst.add(random.nextInt(Integer.MAX_VALUE));
+        int[] arr2 = new int[n] ;
+        for (int i = 0 ; i < bst.getSize() ; i ++)
+            arr2[i] = bst.removeMax() ;
+        for(int i = 1 ; i < n ; i ++)
+            if(arr2[i-1] < arr2[i])
+                throw new IllegalArgumentException("Error");
+        double end2 = System.nanoTime() ;
+        System.out.println("Test BST completed.");
+        System.out.println("Time: " + (end2-start2)/1000000000);
+    }
+
+}
