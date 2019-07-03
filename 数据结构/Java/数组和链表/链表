@@ -1,0 +1,104 @@
+public class LinkedList<A> {
+
+    private class Node{
+        Node next ;
+        A a ;
+        public Node(Node next , A a){
+            this.next = next ;
+            this.a = a ;
+        }
+        public Node(A a){
+            this(null , a) ;
+        }
+        public Node(){
+            this(null , null) ;
+        }
+        public String toString(){
+            return a.toString() ;
+        }
+    }
+
+    private Node dummyHead ;
+    private int size ;
+
+    public LinkedList(){
+        dummyHead = new Node() ;
+        size = 0 ;
+    }
+
+    public int getSize(){
+        return size ;
+    }
+
+    public boolean isEmpty(){
+        return size == 0 ;
+    }
+
+    public void add(int index , A a){
+        if (index < 0 || index > size)
+            throw new IllegalArgumentException("亲爱的，请输入正常的index!") ;
+        Node prev = dummyHead ;
+        for (int i = 0 ; i < index ; i ++){
+            prev = prev.next ;
+        }
+        size ++ ;
+        prev.next = new Node(prev.next , a) ;
+    }
+
+    public void addFirst(A a){
+        add(0 , a) ;
+    }
+
+    public void addLast(A a){
+        add(size , a) ;
+    }
+
+    public A remove(int index){
+        if (index < 0 || index >= size)
+            throw new IllegalArgumentException("亲爱的，再输一遍:)！") ;
+        Node prev = dummyHead ;
+        for (int i = 0 ; i < index ; i ++){
+            prev = prev.next ;
+        }
+        Node del = prev.next ;
+        prev.next = del.next ;
+        del.next = null ;
+        size -- ;
+        return del.a ;
+    }
+
+    public A removeFirst(){
+        return remove( 0 ) ;
+    }
+
+    public A removeLast(){
+        return remove(size-1) ;
+    }
+
+    public boolean contains(A a){
+        Node prev = dummyHead.next ;
+        while(prev != null){
+            if (prev.a.equals(a))
+                return true ;
+            prev = prev.next ;
+        }
+        return false ;
+    }
+
+    public String toString(){
+        StringBuilder str = new StringBuilder() ;
+        for (Node cur = dummyHead.next ; cur != null ; cur = cur.next)
+            str.append(cur.a + "->") ;
+        str.append("NULL") ;
+        return str.toString() ;
+    }
+
+    public static void main(String[] args) {
+        LinkedList<Integer> one = new LinkedList<>() ;
+        for (int i = 0; i < 5; i++) {
+            one.addFirst(i);
+        }
+        one.remove(4) ;
+        System.out.println(one);
+    }
+}
