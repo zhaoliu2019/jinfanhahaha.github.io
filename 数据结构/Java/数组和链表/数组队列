@@ -1,0 +1,56 @@
+public class ArrayQueue<A> implements Queue<A> {
+    private Array<A> one;
+    public ArrayQueue(int capacity){
+        one = new Array<>(capacity);
+    }
+
+    public ArrayQueue(){
+        one = new Array<>();
+    }
+
+    public int getCapacity(){
+        return one.getCapacity();
+    }
+
+    public void enqueue(A a){
+        one.addLast(a);
+    }
+
+    public A dequeue(){
+        return one.removeFirst();
+    }
+
+    public A getFront(){
+        return one.getFirst();
+    }
+
+    public int getSize(){
+        return one.getSize();
+    }
+
+    public boolean isEmpty(){
+        return one.isEmpty();
+    }
+
+    public String toString(){
+        StringBuilder str = new StringBuilder();
+        str.append("Queue: front[");
+        for(int i = 0;i < one.getSize();i++){
+            str.append(one.get(i));
+            if(i != one.getSize()-1)
+                str.append(",");
+        }
+        str.append("]tail");
+        return str.toString();
+    }
+
+    public static void main(String[]args){
+        ArrayQueue<Integer> one = new ArrayQueue<>();
+        for(int i = 0;i < 5;i++){
+            one.enqueue(i);
+            System.out.println(one);
+        }
+        one.dequeue();
+        System.out.println(one);
+    }
+}
