@@ -1,0 +1,71 @@
+public class LoopQueue<A> implements Queue<A> {
+
+    private A[] date ;
+    private int size ;
+    private int font , tail ;
+
+    public LoopQueue(int capacity){
+        date = (A[]) new Object[capacity+1] ;
+        size = 0 ;
+        font = 0 ;
+        tail = 0 ;
+    }
+    public LoopQueue(){
+        this(10) ;
+    }
+
+    private void resize(int newCapacity){
+        A[] b = (A[]) new Object[newCapacity+1] ;
+        for (int i = 0 ; i < size ; i ++){
+            b[i] = date[(font+i)%date.length] ;
+        }
+        date = b ;
+        font = 0 ;
+        tail = size ;
+    }
+
+    @Override
+    public int getSize() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return font == tail;
+    }
+
+    @Override
+    public void enqueue(A a) {
+        if (size == date.length-1)
+            resize(2*(date.length-1));
+        date[tail] = a ;
+        tail = (tail+1)%date.length ;
+        size ++ ;
+    }
+
+    @Override
+    public A dequeue() {
+        if (isEmpty())
+            throw new IllegalArgumentException("Queue is null");
+        A del = date[font] ;
+        date[font] = null ;
+        font = (font+1)%date.length ;
+        size -- ;
+        if (size == (date.length-1) / 4 && date.length!= 2)
+            resize((date.length-1) / 2);
+        return del ;
+    }
+
+    @Override
+    public A getFront() {
+        if (isEmpty())
+            throw new IllegalArgumentException("Queue is null");
+        return date[font] ;
+    }
+
+    public static void main(String[] args) {
+        LoopQueue one = new LoopQueue();
+        one.enqueue(1);
+        System.out.println(one.getFront());
+    }
+}
