@@ -1,0 +1,8 @@
+public interface Queue<A> {
+
+    int getSize();
+    boolean isEmpty();
+    void enqueue(A a);
+    A dequeue();
+    A getFront();
+}
