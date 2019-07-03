@@ -1,1 +1,174 @@
 
+public class Array<A>{
+
+    private int size ;
+    private A[] date ;
+
+    public Array(int capacity){
+        date = (A[]) new Object[capacity] ;
+        size = 0 ;
+    }
+    public Array(){
+        this(10) ;
+    }
+
+    public boolean isEmpty(){
+        return size == 0 ;
+    }
+
+    public int getSize(){
+        return size ;
+    }
+
+    public int getCapacity(){
+        return date.length ;
+    }
+
+    private void resize(int newCapacity){
+        A[] b = (A[]) new Object[newCapacity] ;
+        for (int i = 0 ; i < size ; i ++)
+            b[i] = date[i] ;
+        date = b ;
+    }
+
+    public void add(int index , A a){
+        if (index < 0 || index > size)
+            throw new IllegalArgumentException("Index is illegal") ;
+        if (size == date.length)
+            resize(2 * date.length);
+        for (int i = size ; i > index ; i --){
+            date[i] = date[i-1] ;
+        }
+        date[index] = a ;
+        size ++ ;
+    }
+
+    public void addFirst(A a){
+        add(0 , a) ;
+    }
+
+    public void addLast(A a){
+        add(size , a) ;
+    }
+
+    public A remove(int index){
+        A del = date[index] ;
+        if (index < 0 || index >= size)
+            throw new IllegalArgumentException("Index is illegal!") ;
+        for (int i = index ; i < size-1 ; i ++){
+            date[i] = date[i+1] ;
+        }
+        size -- ;
+        date[size] = null ;
+        if (size == date.length / 4 && date.length != 1)
+            resize(date.length / 2) ;
+        return del ;
+    }
+
+    public A removeFirst(){
+        return remove(0) ;
+    }
+
+    public A removeLast(){
+        return remove(size-1) ;
+    }
+
+    public boolean contains(A a){
+        for (int i = 0 ; i < size ; i ++){
+            if (date[i].equals(a))
+                return true ;
+        }
+        return false ;
+    }
+
+    public A get(int index){
+        if (index < 0 || index > size-1)
+            throw new IllegalArgumentException("Index is illegal!") ;
+        return date[index] ;
+    }
+
+    public A getFirst(){
+        return get(0) ;
+    }
+
+    public A getLast(){
+        return get(size-1) ;
+    }
+
+    public int findFirst(A a){
+        for (int i = 0 ; i < size ; i ++){
+            if (date[i].equals(a))
+                return i ;
+        }
+        return -1 ;
+    }
+
+    public Array find(A a){
+        Array one = new Array() ;
+        for (int i = 0 ; i < size ; i ++){
+            if (date[i].equals(a))
+                one.addLast(i);
+        }
+        if (one.getSize() == 0)
+            one.addLast(-1);
+        return one ;
+    }
+
+    public void removeElements(A a){
+        int i = 0 ;
+        while(i != size){
+            while (date[i].equals(a))
+                remove(i) ;
+            i ++ ;
+        }
+    }
+
+    public void set(int index , A a){
+        if (index < 0 || index > size-1)
+            throw new IllegalArgumentException("Index is illegal!") ;
+        date[index] = a ;
+    }
+
+    public void swap(int i , int j ){
+        if (i < 0 || i >= size || j < 0 || j >= size)
+            throw new IllegalArgumentException("Index is illegal!") ;
+        A t = date[i] ;
+        date[i] = date[j] ;
+        date[j] = t ;
+    }
+
+    public String toString(){
+        StringBuilder str = new StringBuilder();
+        str.append(String.format("Array: size = %d , capacity = %d\n[" , size , getCapacity()));
+        for (int i = 0 ; i < size ; i ++){
+            str.append(date[i]) ;
+            if (i != size-1)
+                str.append(", ") ;
+        }
+        str.append("]") ;
+        return str.toString() ;
+    }
+
+    public static void main(String[] args) {
+        Array<Integer> one = new Array<>();
+        for (int i = 0 ; i < 5 ; i ++)
+            one.add(i , i);
+        one.remove(3) ;
+        one.remove(3) ;
+        one.remove(0) ;
+        one.remove(0) ;
+        one.remove(0) ;
+        one.add(0 , 0);
+        one.remove(0) ;
+        one.add(0 , 0);
+        one.add(0,1);
+        one.add(0,1);
+        System.out.println(one);
+        System.out.println(one.contains(1));
+        System.out.println(one.getLast());
+        System.out.println(one.find(2));
+        one.removeElements(1);
+        System.out.println(one);
+    }
+}
+
