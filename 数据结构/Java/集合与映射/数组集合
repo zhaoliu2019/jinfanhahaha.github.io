@@ -1,0 +1,30 @@
+import primary.Array_RE;
+
+public class ArraySet<A> implements Set<A>{
+
+    private Array_RE<A> arr ;
+    public ArraySet(){
+        arr = new Array_RE<>();
+    }
+
+    public boolean isEmpty(){
+        return arr.isEmpty() ;
+    }
+
+    public boolean contains(A a){
+        return arr.contains(a) ;
+    }
+
+    public void remove(A a){
+        arr.removeElements(a); ;
+    }
+
+    public void add(A a){
+        if (!arr.contains(a))
+            arr.addLast(a);
+    }
+
+    public int getSize(){
+        return arr.getSize() ;
+    }
+}
