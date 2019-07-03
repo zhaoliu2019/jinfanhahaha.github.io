@@ -1,0 +1,45 @@
+import java.util.ArrayList;
+
+public class Test2 {
+
+    public static void main(String[] args) {
+        ArrayList<String> words = new ArrayList<>();
+        long start1 = System.nanoTime() ;
+        if(FileOperation.readFile("pride-and-prejudice.txt", words)) {
+           // System.out.println("Total words: " + words.size());
+
+            TrieMap<String, Integer> map = new TrieMap<>() ;
+            for (String word : words) {
+                if (map.contains(word))
+                    map.set(word, map.get(word) + 1);
+                else
+                    map.add(word, 1);
+            }
+
+           // System.out.println("Total different words: " + map.getSize());
+            //System.out.println("Frequency of PRIDE: " + map.get("pride"));
+            //System.out.println("Frequency of PREJUDICE: " + map.get("prejudice"));
+        }
+        long end1 = System.nanoTime() ;
+        System.out.println("TrieMap -- Time: " + (end1-start1)/1000000000.0);
+        ArrayList<String> words1 = new ArrayList<>();
+        long start2 = System.nanoTime() ;
+        if(FileOperation.readFile("pride-and-prejudice.txt", words1)) {
+            //System.out.println("Total words: " + words1.size());
+
+            BSTMap<String, Integer> map = new BSTMap<>() ;
+            for (String word : words1) {
+                if (map.contains(word))
+                    map.set(word, map.get(word) + 1);
+                else
+                    map.add(word, 1);
+            }
+
+            //System.out.println("Total different words: " + map.getSize());
+            //System.out.println("Frequency of PRIDE: " + map.get("pride"));
+            //System.out.println("Frequency of PREJUDICE: " + map.get("prejudice"));
+        }
+        long end2 = System.nanoTime() ;
+        System.out.println("BSTMap -- Time: " + (end2-start2)/1000000000.0);
+    }
+}
