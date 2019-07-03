@@ -1,0 +1,8 @@
+public interface Set<A> {
+
+    void add(A a) ;
+    void remove(A a) ;
+    boolean contains(A a) ;
+    int getSize() ;
+    boolean isEmpty() ;
+}
