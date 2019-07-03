@@ -1,0 +1,189 @@
+public class LinkedList_Re<A> {
+
+    private class Node{
+        Node next ;
+        A a ;
+        public Node(Node next , A a){
+            this.next = next ;
+            this.a = a ;
+        }
+        public Node(A a){
+            this(null , a) ;
+        }
+        public Node(){
+            this(null , null) ;
+        }
+        public String toString(){
+            return a.toString() ;
+        }
+    }
+
+    private Node del ;
+    private Node dummyHead ;
+    private int size ;
+
+    public LinkedList_Re(){
+        dummyHead = new Node() ;
+        size = 0 ;
+    }
+
+    public int getSize(){
+        return size ;
+    }
+
+    public boolean isEmpty(){
+        return size == 0 ;
+    }
+
+    public void add(int index , A a){
+        if (index < 0 || index > size)
+            throw new IllegalArgumentException("Index is illegal！") ;
+        dummyHead = add(dummyHead , index , a) ;
+        size ++ ;
+    }
+    private Node add(Node node , int index , A a){
+        Node prev = node ;
+        if (index == 0){
+            prev.next = new Node(prev.next , a) ;
+        }
+        if (prev.next == null){
+            return prev ;
+        }
+        prev.next = add(prev.next , index - 1 , a) ;
+        return prev ;
+    }
+
+    public void addFirst(A a){
+        add(0 , a) ;
+    }
+
+    public void addLast(A a){
+        add(size , a);
+    }
+
+    public A remove(int index){
+        if (index < 0 || index >= size)
+            throw new IllegalArgumentException("Index is illegal!") ;
+        dummyHead = remove(dummyHead , index) ;
+        size -- ;
+        return del.a ;
+    }
+    private Node remove(Node node , int index){
+        Node prev = node ;
+        if (index == 0){
+            Node del = prev.next ;
+            prev.next = del.next ;
+            this.del = new Node(del.a) ;
+            del.next = null ;
+        }
+        if (node.next == null){
+            return node ;
+        }
+        prev.next = remove(prev.next , -- index) ;
+        return prev ;
+    }
+
+    public A removeFirst(){
+        return remove(0) ;
+    }
+
+    public A removeLast(){
+        return remove(size-1) ;
+    }
+
+    public void removeElements(A a){
+        dummyHead = removeElements(dummyHead , a) ;
+    }
+    private Node removeElements(Node node , A a){
+        Node prev = node ;
+        if (prev.next == null){
+            return prev ;
+        }
+        while(prev.next.a.equals(a)){
+            Node del = prev.next ;
+            prev.next = del.next ;
+            del.next = null ;
+            size -- ;
+        }
+        prev.next = removeElements(prev.next , a) ;
+        return prev ;
+    }
+
+    public void removeElement(A a){
+        dummyHead = removeElement(dummyHead , a) ;
+    }
+    private Node removeElement(Node node , A a){
+        Node prev = node ;
+        if (prev.next == null){
+            return prev ;
+        }
+        if(prev.next.a.equals(a)){
+            Node del = prev.next ;
+            prev.next = del.next ;
+            del.next = null ;
+            size -- ;
+            return prev ;
+        }
+        prev.next = removeElement(prev.next , a) ;
+        return prev ;
+    }
+
+    public boolean contains(A a){
+        if (dummyHead.next == null)
+            return false ;
+        return contains(dummyHead.next , a) ;
+    }
+    private boolean contains(Node node , A a){
+        if (node.a.equals(a))
+            return true ;
+        if (node.next == null)
+            return false ;
+        return contains(node.next , a);
+    }
+
+    public A get(int index){
+        if (index < 0 || index >= size)
+            throw new IllegalArgumentException("Index is illegal!") ;
+        return get(dummyHead.next , index).a ;
+    }
+    private Node get(Node node , int index){
+        if (index == 0){
+            return node ;
+        }
+        return get(node.next , index - 1) ;
+    }
+
+    public A getFirst(){
+        return get(0) ;
+    }
+
+    public A getLast(){
+        return get(size-1) ;
+    }
+
+    public String toString(){
+        StringBuilder str = new StringBuilder();
+        for (Node cur = dummyHead.next ; cur != null ; cur = cur.next)
+            str.append(cur.a + "->") ;
+        str.append("NULL") ;
+        return str.toString() ;
+    }
+
+    public static void main(String[] args) {
+        LinkedList_Re one = new LinkedList_Re() ;
+        for (int i = 0; i < 5; i++) {
+            one.addFirst(i);
+            one.addFirst(i);
+        }
+        one.addFirst(3);
+        one.removeElements(3);
+        one.removeLast();
+        System.out.println(one.getSize());
+        System.out.println(one);
+        System.out.println(one.contains(0));
+        System.out.println(one.get(2));
+        System.out.println(one.getLast());
+
+    }
+}
+
