@@ -1,0 +1,90 @@
+public class ArrayMap<K , V> implements Map<K , V> {
+
+    private K[] key ;
+    private V[] value ;
+    private int size ;
+
+    public ArrayMap(int capacity){
+        key = (K[]) new Object[capacity] ;
+        value = (V[]) new Object[capacity] ;
+        size = 0 ;
+    }
+    public ArrayMap(){
+        this(10) ;
+    }
+    private void resize(int newCapacity){
+        K[] newK = (K[]) new Object[newCapacity] ;
+        V[] newV = (V[]) new Object[newCapacity] ;
+        for (int i = 0 ; i < size ; i ++){
+            newK[i] = key[i] ;
+            newV[i] = value[i] ;
+        }
+        key = newK ;
+        value = newV ;
+    }
+
+    public int getSize(){
+        return size ;
+    }
+
+    public boolean isEmpty(){
+        return size == 0 ;
+    }
+
+    //辅助函数
+    public int getIndex(K key){
+        for (int i = 0 ; i < size ; i ++){
+            if (this.key[i].equals(key))
+                return i ;
+        }
+        return -1 ;
+    }
+
+    public void add(K key , V value){
+        if (size == this.key.length)
+            resize(2 * this.key.length);
+        int n = getIndex(key) ;
+        if (n != -1)
+            this.value[n] = value ;
+        else {
+            this.key[size] = key;
+            this.value[size] = value;
+            size++;
+        }
+    }
+
+    public boolean contains(K key){
+        return getIndex(key) != -1 ;
+    }
+
+    public void set(K key , V value){
+        int n = getIndex(key) ;
+        if (n == -1)
+            throw new IllegalArgumentException(key + "doesn't exist!") ;
+        this.value[n] = value ;
+    }
+
+    public V get(K key){
+        int n = getIndex(key) ;
+        return n == -1 ? null : this.value[n] ;
+    }
+
+    public V remove(K key){
+        int n = getIndex(key) ;
+        if (n == -1)
+            return null ;
+        else {
+            for (int i = n ; i < size-1 ; i ++){
+                this.key[i] = this.key[i+1] ;
+                this.value[i] = this.value[i+1] ;
+            }
+            size -- ;
+            this.key[size] = null ;
+            this.value[size] = null ;
+            if (size == this.key.length / 4 && this.key.length != 1)
+                resize(this.key.length / 2);
+            return this.value[n] ;
+        }
+    }
+
+}
