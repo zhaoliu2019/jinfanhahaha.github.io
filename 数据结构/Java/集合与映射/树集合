@@ -1,0 +1,30 @@
+import primary.BSTree;
+
+
+public class BSTSet<A extends Comparable<A>> implements Set<A> {
+
+    private BSTree<A> bst ;
+    public BSTSet(){
+        bst = new BSTree<>() ;
+    }
+
+    public void add(A a){
+        bst.add(a);
+    }
+
+    public void remove(A a){
+        bst.remove(a);
+    }
+
+    public int getSize(){
+        return bst.getSize() ;
+    }
+
+    public boolean isEmpty(){
+        return bst.isEmpty() ;
+    }
+
+    public boolean contains(A a){
+        return bst.contains(a) ;
+    }
+}
