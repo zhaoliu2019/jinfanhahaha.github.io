@@ -1,0 +1,31 @@
+import primary.LinkedList_Re;
+
+public class LinkedListSet<A> implements Set<A>{
+
+    private LinkedList_Re lr ;
+    public LinkedListSet(){
+        lr = new LinkedList_Re();
+    }
+
+    public void add(A a){
+        if (lr.contains(a))
+            return;
+        lr.addFirst(a);
+    }
+
+    public void remove(A a){
+        lr.removeElements(a);
+    }
+
+    public int getSize(){
+        return lr.getSize() ;
+    }
+
+    public boolean isEmpty(){
+        return lr.isEmpty() ;
+    }
+
+    public boolean contains(A a){
+        return lr.contains(a) ;
+    }
+}
