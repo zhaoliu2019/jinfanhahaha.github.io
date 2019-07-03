@@ -1,2 +1,1 @@
-# jinfanhahaha.github.io
-个人博客
+# 小邵奕晴 ， 来  笑一个 ：）
