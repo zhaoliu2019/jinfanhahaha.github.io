@@ -1,0 +1,110 @@
+import java.util.TreeMap;
+
+public class TrieMap<String extends Comparable<String>, V> implements Map<String , V> {
+
+    private class Node{
+
+        V value ;
+        boolean isWord ;
+        TreeMap<Character , Node> next ;
+
+        public Node(V value , boolean isWord){
+            this.isWord = isWord ;
+            this.value = value ;
+            next = new TreeMap<>() ;
+        }
+        public Node(boolean isWord){
+            this(null , isWord) ;
+        }
+        public Node(){
+            this(null , false) ;
+        }
+    }
+
+    private Node root ;
+    private int size ;
+
+    public TrieMap(){
+        root = new Node() ;
+        size = 0 ;
+    }
+
+    public int getSize(){
+        return size ;
+    }
+
+    public boolean isEmpty(){
+        return size == 0 ;
+    }
+
+    public void add(String word , V value){
+
+        Node cur = root ;
+        for (int i = 0 ; i < word.toString().length() ; i ++){
+            char c = word.toString().charAt(i) ;
+            if (cur.next.get(c) == null)
+                cur.next.put(c , new Node()) ;
+            cur = cur.next.get(c) ;
+        }
+        if (!cur.isWord){
+            size ++ ;
+            cur.value = value ;
+            cur.isWord = true ;
+        }
+    }
+
+    public boolean contains(String word){
+
+        Node cur = root ;
+        for (int i = 0 ; i < word.toString().length() ; i ++){
+            char c = word.toString().charAt(i) ;
+            if (cur.next.get(c) == null)
+                return false ;
+            cur = cur.next.get(c) ;
+        }
+        return cur.isWord ;
+    }
+
+    public V get(String word){
+
+        Node cur = root ;
+        for (int i = 0 ; i < word.toString().length() ; i ++){
+            char c = word.toString().charAt(i) ;
+            cur = cur.next.get(c) ;
+        }
+        return cur.value ;
+    }
+
+    public void set(String word , V value){
+
+        Node cur = root ;
+        for (int i = 0 ; i < word.toString().length() ; i ++){
+            char c = word.toString().charAt(i) ;
+            if (cur.next.get(c) == null)
+                cur.next.put(c , new Node()) ;
+            cur = cur.next.get(c) ;
+        }
+        cur.value = value ;
+        cur.isWord = true ;
+    }
+
+    public V remove(String word){
+
+        Node cur = root ;
+        for (int i = 0 ; i <word.toString().length() ; i ++){
+            char c = word.toString().charAt(i) ;
+            if (cur.next.get(c) == null)
+                return null ;
+            cur = cur.next.get(c) ;
+        }
+        V res = null ;
+        if (cur.isWord){
+            res = cur.value ;
+            cur.isWord = false ;
+            cur.value = null ;
+            size -- ;
+        }
+        return res ;
+    }
+
+}
