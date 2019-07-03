@@ -1,0 +1,107 @@
+public class BW_LinkedList<A> {
+
+    private class Node{
+        Node next ;
+        Node last ;
+        A a ;
+        public Node(Node next , Node last , A a){
+            this.a = a ;
+            this.next = next ;
+            this.last = last ;
+        }
+        public Node(A a){
+            this(null , null , a) ;
+        }
+        public Node(){
+            this(null , null , null) ;
+        }
+        public String tiString(){
+            return a.toString() ;
+        }
+    }
+
+    private Node dummyHead ;
+    private int size ;
+
+    public BW_LinkedList(){
+        dummyHead = new Node() ;
+        size = 0 ;
+    }
+
+    public int getSize(){
+        return size ;
+    }
+
+    public boolean isEmpty(){
+        return size == 0 ;
+    }
+
+    public void add(int index , A a){
+        if (index < 0 || index > size)
+            throw new IllegalArgumentException("Index is illegal !") ;
+        Node prev = dummyHead ;
+        for (int i = 0 ; i < index ; i ++){
+            prev = prev.next ;
+        }
+        Node node = new Node(a) ;
+        node.next = prev.next ;
+        prev.next = node ;
+        if (node.next != null)
+            node.next.last = node ;
+        node.last = prev ;
+        size ++ ;
+    }
+
+    public A remove(int index){
+        if (size == 0)
+            throw new IllegalArgumentException("LinkedList is Empty !") ;
+        if (index < 0 || index >= size)
+            throw new IllegalArgumentException("Index is illegal !") ;
+        Node prev = dummyHead ;
+        for (int i = 0 ; i < index ; i ++){
+            prev = prev.next ;
+        }
+        Node del = prev.next ;
+        prev.next = del.next ;
+        del.last = prev ;
+        del.last = null ;
+        del.next = null ;
+        size -- ;
+        return del.a ;
+    }
+
+    public void removeAll(A a){
+        if (size == 0)
+            throw new IllegalArgumentException("LinkedList is Empty !") ;
+        Node prev = dummyHead.next ;
+        while(prev != null){
+            if (prev.a.equals(a)){
+                Node node = prev.last ;
+                node.next = prev.next ;
+                if (prev.next != null)
+                    prev.next.last = node ;
+                prev.last = null ;
+            }
+            prev = prev.next ;
+        }
+    }
+
+    public String toString(){
+        StringBuilder str = new StringBuilder() ;
+        for (Node cur = dummyHead.next ; cur != null ; cur = cur.next)
+            str.append(cur.a + "->") ;
+        str.append("NULL") ;
+        return str.toString() ;
+    }
+
+    public static void main(String[] args) {
+        BW_LinkedList<Integer> one = new BW_LinkedList<>();
+        one.add(0 , 0);
+        one.add(0,1);
+        one.add(0,2);
+        one.add(0,2);
+        one.removeAll(2);
+        System.out.println(one);
+
+    }
+}
