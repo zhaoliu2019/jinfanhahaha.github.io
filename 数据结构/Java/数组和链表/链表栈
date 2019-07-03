@@ -1,0 +1,33 @@
+public class LinkedListStack<A> implements Stack<A> {
+    private LinkedList<A> list;
+    public LinkedListStack(){
+        list = new LinkedList<>();
+    }
+
+    public boolean isEmpty(){
+        return list.isEmpty();
+    }
+
+    public int getSize(){
+        return list.getSize();
+    }
+
+    public void push(A e){
+        list.addFirst(e);
+    }
+
+    public A pop(){
+        return list.getFirst();
+    }
+
+    public A peek(){
+        return list.getFirst();
+    }
+
+    public String toString(){
+        StringBuilder str = new StringBuilder();
+        str.append("Stack: top");
+        str.append(list);
+        return str.toString();
+    }
+}
