@@ -1,0 +1,28 @@
+public class Map_to_Set<A extends Comparable<A>> implements Set<A> {
+
+    private BSTMap<A , A> bm ;
+
+    public Map_to_Set(){
+        bm = new BSTMap<>();
+    }
+
+    public boolean isEmpty(){
+        return bm.isEmpty() ;
+    }
+
+    public boolean contains(A a){
+        return bm.contains(a) ;
+    }
+
+    public int getSize(){
+        return bm.getSize() ;
+    }
+
+    public void add(A a){
+        bm.add(a , null);
+    }
+
+    public void remove(A a){
+        bm.remove(a) ;
+    }
+}
