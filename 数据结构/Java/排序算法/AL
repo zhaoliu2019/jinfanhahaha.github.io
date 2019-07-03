@@ -1,0 +1,199 @@
+import java.util.Arrays;
+
+public class AL<A extends Comparable<A>> {
+
+    //交换数组中两个数的方法
+    private void swap(A[] a , int i , int j){ A temp = a[i] ; a[i] = a[j] ; a[j] = temp ;}
+
+    //对数组某个区间进行插入排序
+    private void insertSort(A[] a , int l , int r){
+        for (int i = l+1 ; i <= r ; i ++){
+            A temp = a[i] ;
+            int j = i ;
+            for (; j > 0 && a[j-1].compareTo(temp) > 0 ; j --)
+                a[j] = a[j-1] ;
+            a[j] = temp ;
+        }
+    }
+
+    //快速排序（双路实现一）
+    public void QKSort2_1(A[] a){
+        QKSort2_1(0 , a.length-1 , a);
+    }
+    private void QKSort2_1(int left , int right , A[] a){
+
+        if (right - left <= 15){
+            insertSort(a , left , right); //高级排序的统一优化
+            return;
+        }
+        swap(a , left , (int)(Math.random()*(right-left+1)+left)); //优化
+        int i = left ;
+        int j = right ;
+        A temp = a[i];
+
+        while (i != j) {
+            while (a[j].compareTo(temp) >= 0 && i < j)
+                j--;
+            while (a[i].compareTo(temp) <= 0 && i < j)
+                i++;
+
+            if (i < j)
+                swap(a, i, j);
+        }
+
+        a[left] = a[i] ;
+        a[i] = temp ;
+        QKSort2_1(left , i-1 , a);
+        QKSort2_1(i+1 , right , a);
+    }
+
+    //快速排序（双路实现二）
+    public void QKSort2_2(A[] a){
+        QKSort2_2(a , 0 , a.length-1);
+    }
+    private void QKSort2_2(A[] a , int l , int r){
+        if (r-l < 15){
+            insertSort(a , l , r);
+            return;
+        }
+        int p = partition_2(a , l , r);
+        QKSort2_2(a , l , p);
+        QKSort2_2(a , p+1 , r);
+    }
+    private int partition_2(A[] a , int l , int r){
+
+        swap(a , l , (int)(Math.random()*(r-l+1)+l)); //优化
+        A temp = a[l] ;
+        int i = l+1 , j = r ;
+
+        while(true){
+            while(i <= l && a[i].compareTo(temp) < 0) i ++ ;
+            while (j >= l+1 && a[j].compareTo(temp) > 0) j -- ;
+            if (i > j) break;
+            swap(a , i , j);
+            i ++ ; j -- ;
+        }
+        swap(a , l , j);
+        return  j ;
+    }
+
+    //快速排序(单路)
+    public void QKSort(A[] a){
+        QKSort( a , 0 , a.length-1);
+    }
+    private void QKSort(A[] a , int l , int r){
+
+        if (r-l < 15){
+            insertSort(a , l , r);
+            return;
+        }
+        int p = partition(a , l , r);
+        QKSort(a , l , p);
+        QKSort(a , p+1 , r);
+    }
+    private int partition(A[] a , int l , int r){
+
+        swap(a , l , (int)(Math.random()*(r-l+1)+l)); //优化
+        A temp = a[l] ;
+        int j = l ;
+        for (int i = l + 1 ; i <= r ; i ++){
+            if (a[i].compareTo(temp) < 0){
+                swap(a , j+1 , i);
+                j ++ ;
+            }
+        }
+        swap(a , l , j);
+
+        return  j ;
+    }
+
+
+    //选择排序
+    public void selectSort(A[] a){
+        for (int i = 0 ; i < a.length ; i ++){
+            int minIndex = i ;
+            for (int j = i+1 ; j < a.length ; j ++){
+                if (a[minIndex].compareTo(a[j]) > 0)
+                    minIndex = j ;
+            }
+            if (minIndex != i)
+                swap(a , minIndex , i);
+        }
+    }
+
+    //插入排序
+    public void insertSort1(A[] a){
+        for (int i = 1 ; i < a.length ; i ++){
+            for (int j = i ; j > 0 && a[j].compareTo(a[j-1]) < 0; j --)
+                swap(a , j , j-1);
+        }
+    }
+
+    //优化插入排序
+    public void insertSort(A[] a){
+        for (int i = 1 ; i < a.length ; i ++){
+            A temp = a[i] ;
+            int j = i ;
+            for (; j > 0 && a[j-1].compareTo(temp) > 0; j --)
+                a[j] = a[j-1] ;
+            a[j] = temp ;
+        }
+    }
+
+    //冒泡排序(优化后)
+    public void bubbleSort(A[] a){
+        int n = a.length ;
+        for (int i = 1 ; i < n ; i ++){
+            for (int j = 0 ; j < a.length-1 ; j ++)
+                if (a[j].compareTo(a[j+1]) > 0) {
+                    swap(a, j, j + 1);
+                    n = j+1 ;
+                }
+        }
+    }
+
+    //归并排序
+    public void mergeSort(A[] a){
+        mergeSort(a , 0 , a.length-1);
+    }
+    private void mergeSort(A[] a , int l , int r){
+        if(r-l < 15){
+            insertSort(a , l , r);
+            return;
+        }
+        int mid = (l+r)/2 ;
+        mergeSort(a , l , mid);
+        mergeSort(a , mid+1 , r);
+        if (a[mid].compareTo(a[mid+1]) > 0) //优化点
+            mergeSort(a , l , mid , r);
+    }
+    private void mergeSort(A[] a , int l , int mid , int r){
+        //A[] b = (A[])new Object[r-l+1] ;
+        A[] b = Arrays.copyOfRange(a, l, r+1);
+        int i = l , j = mid + 1 ;
+        for (int k = l ; k <= r ; k ++){
+            if (i > mid){
+                a[k] = b[j-l] ;
+                j ++ ;
+            }else if (j > r){
+                a[k] = b[i-l] ;
+                i ++ ;
+            }else if (b[i-l].compareTo(b[j-l]) < 0){
+                a[k] = b[i-l] ;
+                i ++ ;
+            }else {
+                a[k] = b[j-l] ;
+                j ++ ;
+            }
+        }
+    }
+
+
+    public static void main(String[] args) {
+        AL<Integer> one = new AL<>();
+        Integer[] a = {9,1,8,2,7,3,6,5} ;
+        one.QKSort2_2(a);
+        for (int i : a)
+            System.out.print(i + " ");
+    }
+}
