@@ -1,0 +1,73 @@
+public class MinHeap<A extends Comparable<A>> {
+
+    private Array<A> date ;
+    public MinHeap(){
+        date = new Array<>() ;
+    }
+    public MinHeap(int capacity){
+        date = new Array<>(capacity) ;
+    }
+    public MinHeap(A[] arr){
+        date = new Array<>(arr) ;
+        for (int i = parent(arr.length-1) ; i >= 0 ; i --)
+            siftDown(i) ;
+    }
+
+    private int parent(int i ){
+        if (i == 0)
+            throw new IllegalArgumentException("index-0 doesn't have parent.") ;
+        return (i-1) / 2 ;
+    }
+    private int leftChild(int i ){
+        return i*2 + 1 ;
+    }
+    private int rightChild(int i ){
+        return i*2 + 2 ;
+    }
+
+    public void add(A a){
+        date.addLast(a);
+        siftUp(date.getSize()-1) ;
+    }
+
+    private void siftUp(int i){
+        while (i > 0 && date.get(i).compareTo(date.get(parent(i))) < 0) {
+            date.swap(i, parent(i));
+            i = parent(i) ;
+        }
+    }
+
+    private A findMin(){
+        if(date.getSize() == 0)
+            throw new IllegalArgumentException("Can not findMin when heap is empty.");
+        return date.get(0) ;
+    }
+
+    public A extractMin(){
+        A res = findMin() ;
+        date.swap(0 , date.getSize()-1);
+        date.removeLast() ;
+        siftDown(0) ;
+        return res ;
+    }
+
+    private void siftDown(int i){
+
+        while (leftChild(i) < date.getSize()){
+            int j = leftChild(i) ;
+            if (j+1 < date.getSize() && date.get(j).compareTo(date.get(j+1)) > 0)
+                j ++ ;
+            if (date.get(i).compareTo(date.get(j)) < 0)
+                break;
+            date.swap(i , j);
+            i = j ;
+        }
+    }
+
+    public A replace(A a){
+        A res = findMin() ;
+        date.set(0 , a);
+        siftDown(0);
+        return res ;
+    }
+}
