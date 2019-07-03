@@ -1,0 +1,27 @@
+public class PriorityQueue<A extends Comparable<A>> implements Queue<A> {
+
+    private MaxHeap<A> maxHeap ;
+    public PriorityQueue(){
+        maxHeap = new MaxHeap<>();
+    }
+
+    public int getSize(){
+        return maxHeap.size() ;
+    }
+
+    public boolean isEmpty(){
+        return maxHeap.isEmpty() ;
+    }
+
+    public A getFront(){
+        return maxHeap.findMax() ;
+    }
+
+    public A dequeue(){
+        return maxHeap.extractMax() ;
+    }
+
+    public void enqueue(A a){
+        maxHeap.add(a) ;
+    }
+}
