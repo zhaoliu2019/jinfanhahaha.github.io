@@ -1,0 +1,49 @@
+public class PriorityQueue_Array<A extends Comparable<A>> implements Queue<A> {
+
+    private Array<A> arr ;
+
+    public PriorityQueue_Array(){
+        arr = new Array<>();
+    }
+
+    public int getSize(){
+        return arr.getSize() ;
+    }
+
+    public boolean isEmpty(){
+        return arr.isEmpty() ;
+    }
+
+    public A getFront(){
+        if (arr.isEmpty())
+            throw new IllegalArgumentException("Empty") ;
+        A res = arr.get(0) ;
+        for (int i = 1 ; i < arr.getSize() ; i ++){
+            if (res.compareTo(arr.get(i)) < 0)
+                res = arr.get(i) ;
+        }
+        return res ;
+    }
+
+    public A dequeue(){
+        if (arr.isEmpty())
+            throw new IllegalArgumentException("Empty") ;
+        A res = getFront() ;
+        arr.removeElement(res);
+        return res ;
+    }
+
+    public void enqueue(A a){
+        arr.addLast(a);
+    }
+
+    public static void main(String[] args) {
+        PriorityQueue_Array<Integer> one = new PriorityQueue_Array<>() ;
+        one.enqueue(1);
+        one.enqueue(5);
+        System.out.println(one.getFront());
+        System.out.println(one.getSize());
+        System.out.println(one.isEmpty());
+    }
+
+}
