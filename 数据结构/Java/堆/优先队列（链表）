@@ -1,0 +1,53 @@
+import primary.LinkedList_Re;
+
+public class PriorityQueue_LinkedList<A extends Comparable<A>> implements Queue<A> {
+
+    private LinkedList_Re<A> linkedList ;
+
+    public PriorityQueue_LinkedList(){
+        linkedList = new LinkedList_Re<>();
+    }
+
+    public int getSize(){
+        return linkedList.getSize() ;
+    }
+
+    public boolean isEmpty(){
+        return linkedList.isEmpty() ;
+    }
+
+    public A getFront(){
+        if (isEmpty())
+            throw new IllegalArgumentException("Empty!") ;
+        A res = linkedList.get(0) ;
+        for (int i = 1 ; i < getSize() ; i ++){
+            if (res.compareTo(linkedList.get(i)) < 0)
+                res = linkedList.get(i) ;
+        }
+        return res ;
+    }
+
+    public A dequeue(){
+        if (isEmpty())
+            throw new IllegalArgumentException("Empty!") ;
+        A res = getFront() ;
+        linkedList.removeElement(res);
+        return res ;
+    }
+
+    public void enqueue(A a){
+        linkedList.addFirst(a);
+    }
+
+    public static void main(String[] args) {
+        PriorityQueue_LinkedList<Integer> one = new PriorityQueue_LinkedList<>() ;
+        one.enqueue(9);
+        one.enqueue(9);
+        one.enqueue(9);
+        one.dequeue() ;
+        one.dequeue() ;
+        System.out.println(one.getFront());
+        System.out.println(one.getSize());
+        System.out.println(one.isEmpty());
+    }
+}
