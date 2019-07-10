@@ -1,2 +1,4 @@
-# 慕课网刘宇波 波波老师 玩转数据结构课程的代码实现,提供Java版本，python版本还在开发中
+# jinfan.github.io
+吃西瓜🍉🍉🍉学习笔记  
+建议使用谷歌浏览器，若公式不能正常显示，可以安装谷歌插件https://chrome.google.com/webstore/detail/mathjax-plugin-for-github/ioemnmodlmafdkllaclgeombjnmnbima/related
 
