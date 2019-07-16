@@ -64,7 +64,7 @@ def residuals_func_regularization(p, x, y):
 '''这是在原来的残差函数中，加上了L2正则化项后的函数，这一步的目的就是约束参数的大小，防止有些参数为了拟合数据而过大，导致过拟合。
    具体想深入了解，可以查阅正则化相关的内容'''
 # 接下来就是将正则化封装进我们的函数里，并且实现可视化
-def fitting(M=0):
+def fitting_regularization(M=0):
     # 随机初始化多项式参数
     p_init = np.random.rand(M + 1)
     # 最小二乘法
