@@ -34,6 +34,9 @@ def __init__(self):
    # 原函数
    def sign(x, w, b):
      return np.dot(x, w) + b
+
+   # 解决numpy制度问题
+   self.w = np.ones(len(X_train[0]), dtype=np.float32)
    
    # 到此一切就绪，开始训练模型
    is_wrong = False
@@ -53,7 +56,7 @@ def __init__(self):
 # 第三步，预测我们的测试集
 def predict(self,X_predict):
    # 先断言，确保用户已经进行过fit操作
-   assert self.intercept_ is not None and self.coef_ is not None, \
+   assert self.w is not None and b is not None, \
             "must fit before predict!"
    # 确保测试集是有效的
    assert X_predict.shape[1] == len(self.w), \
@@ -63,9 +66,6 @@ def predict(self,X_predict):
 
 # 构建私有的_predict方法用来对单个x进行预测
 def _predict(self , x):
-   # 断言，确保x是符合规范的
-   assert x.shape[0] == self._X_train.shape[1], \
-            "the feature number of x must be equal to X_train"
    if self.w.dot(x) + self.b >= 0 :
       return 1
    else:
