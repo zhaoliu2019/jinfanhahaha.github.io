@@ -36,7 +36,7 @@ class KNNClassifier:
 
     def score(self, X_test, y_test):
         y_predict = self.predict(X_test)
-        return accuracy_score(y_test, y_predict)
+        return sum(y_test == y_predict) / len(y_test)
 
     def _predict(self, x):
         """给定单个待预测数据x，返回x的预测结果值"""
