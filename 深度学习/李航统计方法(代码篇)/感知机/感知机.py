@@ -22,51 +22,61 @@ def __init__(self):
   self.b = None
   
 # 第二步，用随机梯度来训练我们的模型
-'''为了更好的理解随机梯度的代码，我先写个模板。'''
- def fit(self, X_train, y_train, n_iters=50, t0=5, t1=50):
+ def fit(self, X_train, y_train, t0=5, t1=50):
    # 首先进行断言 判断用户输入的X_train和y_train是没有问题的
    assert X_train.shape[0] == y_train.shape[0], \
             "the size of X_train must be equal to the size of y_train"
-   # n_iters是随机的次数，因为只随机一次的效果往往不理想（比较批量梯度下降法次数算很少了）初始值为50，用户可根据需要进行改变
-   assert n_iters >= 1
-   
-   # 原函数
-   def J() :
-      pass
-   
-   # 原函数的导数
-   def dJ（）:
-      pass
    
    # 学习率函数，越往后学习率应该越小，如果取固定值，到达最低点时很有可能又跳出最低点了，模拟了‘退火’思想
    def learning_rate(t):
      return t0 / (t + t1)
-
-   # initial_theta的作用随机取出一列进行训练，确保随机梯度的随机性
-   initial_theta = np.random.randn(X_b.shape[1])
    
-   # 进行随机梯度的训练，
-   def sgd(X_b, y, initial_theta, n_iters=5):
-      '''...'''
-      return w,b
+   # 原函数
+   def sign(self, x, w, b):
+     return np.dot(x, w) + b
    
-   self.w , self.b = sgd(X_b, y_train, initial_theta, n_iters)
-
+   # 到此一切就绪，开始训练模型
+   is_wrong = False
+   while not is_wrong:
+     wrong_count = 0
+     for d in range(len(X_train)):
+       X = X_train[d]
+       y = y_train[d]
+       if y * self.sign(X, w, b) <= 0:
+         w = w + learning_rate(d) * np.dot(y, X)
+         b = b + learning_rate(d) * y
+         wrong_count += 1
+     if wrong_count == 0:
+       is_wrong = True
    return self
+# 第三步，预测我们的测试集
+def predict(self,X_predict):
+   # 先断言，确保用户已经进行过fit操作
+   assert self.intercept_ is not None and self.coef_ is not None, \
+            "must fit before predict!"
+   # 确保测试集是有效的
+   assert X_predict.shape[1] == len(self.w), \
+            "the feature number of X_predict must be equal to X_train"
+   y_predict = [self._predict(x) for x in X_predict]
+   return np.array(y_predict)
 
-# 看过模板之后 再实现感知机的随机梯度就很简单了
- def fit(self, X_train, y_train, n_iters=50, t0=5, t1=50):
-   # 首先进行断言 判断用户输入的X_train和y_train是没有问题的
-   assert X_train.shape[0] == y_train.shape[0], \
-            "the size of X_train must be equal to the size of y_train"
-   # n_iters是随机的次数，因为只随机一次的效果往往不理想（比较批量梯度下降法次数算很少了）初始值为50，用户可根据需要进行改变
-   assert n_iters >= 1
-   
-   # 原函数的导数
-   def dJ（）:
-      
-
-
+# 构建私有的_predict方法用来对单个x进行预测
+def _predict(self , x):
+   # 断言，确保x是符合规范的
+   assert x.shape[0] == self._X_train.shape[1], \
+            "the feature number of x must be equal to X_train"
+   if self.w.dot(x) + self.b >= 0 :
+      return 1
+   else:
+      return 0
+# 测试模型的准确度
+def score(self, X_test, y_test):
+   """根据测试数据集 X_test 和 y_test 确定当前模型的准确度"""
+   y_predict = self.predict(X_test)
+   # 断言 确保输入的y_test符合规范
+   assert len(y_true) == len(y_predict), \
+        "the size of y_true must be equal to the size of y_predict"
+   return np.sum(y_true == y_predict) / len(y_true)
 
   
   
