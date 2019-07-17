@@ -77,9 +77,9 @@ def score(self, X_test, y_test):
    """根据测试数据集 X_test 和 y_test 确定当前模型的准确度"""
    y_predict = self.predict(X_test)
    # 断言 确保输入的y_test符合规范
-   assert len(y_true) == len(y_predict), \
-        "the size of y_true must be equal to the size of y_predict"
-   return np.sum(y_true == y_predict) / len(y_true)
+   assert len(y_test) == len(y_predict), \
+        "the size of y_test must be equal to the size of y_predict"
+   return np.sum(y_test == y_predict) / len(y_test)
 
   
   
