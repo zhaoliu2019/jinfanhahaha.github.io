@@ -43,6 +43,7 @@ def __init__(self):
        X = X_train[d]
        y = y_train[d]
        if y * self.sign(X, w, b) <= 0:
+         # 更新操作
          w = w + learning_rate(d) * np.dot(y, X)
          b = b + learning_rate(d) * y
          wrong_count += 1
