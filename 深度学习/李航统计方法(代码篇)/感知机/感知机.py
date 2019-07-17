@@ -49,6 +49,8 @@ def __init__(self):
          wrong_count += 1
      if wrong_count == 0:
        is_wrong = True
+   self.w = w
+   self.b = b
    return self
 # 第三步，预测我们的测试集
 def predict(self,X_predict):
