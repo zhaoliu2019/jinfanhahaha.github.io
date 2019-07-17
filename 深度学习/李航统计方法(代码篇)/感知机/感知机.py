@@ -69,7 +69,7 @@ def _predict(self , x):
    if self.w.dot(x) + self.b >= 0 :
       return 1
    else:
-      return 0
+      return -1
 # 测试模型的准确度
 def score(self, X_test, y_test):
    """根据测试数据集 X_test 和 y_test 确定当前模型的准确度"""
