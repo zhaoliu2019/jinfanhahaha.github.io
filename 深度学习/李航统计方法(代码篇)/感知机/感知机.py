@@ -32,7 +32,7 @@ def __init__(self):
      return t0 / (t + t1)
    
    # 原函数
-   def sign(self, x, w, b):
+   def sign(x, w, b):
      return np.dot(x, w) + b
    
    # 到此一切就绪，开始训练模型
@@ -42,15 +42,13 @@ def __init__(self):
      for d in range(len(X_train)):
        X = X_train[d]
        y = y_train[d]
-       if y * self.sign(X, w, b) <= 0:
+       if y * self.sign(X, self.w, self.b) <= 0:
          # 更新操作
-         w = w + learning_rate(d) * np.dot(y, X)
-         b = b + learning_rate(d) * y
+         self.w = self.w + learning_rate(d) * np.dot(y, X)
+         self.b = self.b + learning_rate(d) * y
          wrong_count += 1
      if wrong_count == 0:
        is_wrong = True
-   self.w = w
-   self.b = b
    return self
 # 第三步，预测我们的测试集
 def predict(self,X_predict):
