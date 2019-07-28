@@ -53,4 +53,6 @@ correct_prediction = tf.equal(tf.cast(predict, tf.int64), y_reshape)
 '''由此，我们可以得到准确率'''
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float64))
 
-
+'''最后一步构建计算图用梯度下降'''
+with tf.name_scope('train_op'):
+    train_op = tf.train.AdamOptimizer(1e-3).minimize(loss)
