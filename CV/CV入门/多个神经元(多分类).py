@@ -174,3 +174,37 @@ with tf.Session() as sess:
                 all_test_acc_val.append(test_acc_val)
             test_acc = np.mean(all_test_acc_val)
             print('[Test ] Step: %d, acc: %4.5f' % (i+1, test_acc))
+
+            '''发现损失函数不同，会直接导致预测的准确率不同，以交叉熵为损失函数的预测值大概就是30%左右，
+               而以均方误差的损失函数的准确率可以达到40%，对于多分类图片问题，我试了试传统的机器学习方法。'''
+
+# 因为这多个神经元的分类思想，运用的就是逻辑斯蒂多分类的思想，先感受以下传统方法中大名鼎鼎的LogisticRegression
+         '''准确率大概在0.363'''
+from sklearn.linear_model import LogisticRegression
+lr = LogisticRegression(penalty='l2' , C = 0.5,solver='sag')
+lr.fit(X_train,y_train)
+lr.score(X_test,y_test)
+
+# 接下来，试试大名鼎鼎的SVM算法
+         '''准确率大概在'''
+from sklearn.svm import SVC
+svc = SVC(C=0.5)
+svc.fit(X_train,y_train)
+svc.score(X_test,y_test)
+
+# 最后试一试KNN算法
+        '''准确率大概在'''
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=2)
+knn.fit(X_train,y_train)
+knn.score(X_test,y_test)
+
+# PS ：以上算法都没有经过调参，调参后可能会更加好
+
+              
+            
+            
+            
+            
+            
+            
