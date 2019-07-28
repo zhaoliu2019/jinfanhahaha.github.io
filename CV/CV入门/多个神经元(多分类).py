@@ -27,10 +27,10 @@ x = tf.placeholder(tf.float32, [None, 3072])
 # 设我们的y
 y = tf.placeholder(tf.int64, [None])
 # 接下去，设我们的权值w ， 其中initializer给它加了一个均值为0方差为1的正态分布
-w = tf.get_variable('w', [x.get_shape()[-1], 1],
+w = tf.get_variable('w', [x.get_shape()[-1], 10],
                    initializer=tf.random_normal_initializer(0, 1))
 # 再然后，设我们的偏置b,其中的initializer初始化为0.0的值
-b = tf.get_variable('b', [1],
+b = tf.get_variable('b', [10],
                    initializer=tf.constant_initializer(0.0))
 
 # 根据神经元的公式，我们可以得到y=w·x+b
@@ -75,10 +75,8 @@ class CifarData:
         # 循环读出文件夹下的文件
         for filename in filenames:
            data, labels = load_data(filename)
-           for item, label in zip(data, labels):
-               if label in [0, 1]:  # 取0和1的原因是咱们就只做二分类
-                   all_data.append(item)
-                   all_labels.append(label)
+           all_data.append(data)
+           all_labels.append(labels)
         self._data = np.vstack(all_data) # 将多个向量合并成矩阵
         self._data = self._data / 127.5 - 1  # 因为数据是像素，处于0-255之间，归一化使数值分布在-1～1之间
         self._labels = np.hstack(all_labels)  # 将向量变成多行一列的矩阵
