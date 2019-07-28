@@ -183,7 +183,7 @@ lr = LogisticRegression(penalty='l2' , C = 0.5,solver='sag')
 lr.fit(X_train,y_train)
 lr.score(X_test,y_test)
 
-'''惊讶的来了，我用SVC训练的准确度可以达到86.75%，原理分类图片不一定要用神经网络呢，如果只是二分类图片，
+'''惊讶的来了，我用SVC训练的准确度可以达到86.75%，原来分类图片不一定要用神经网络呢，如果只是二分类图片，
    传统的机器学习方法并不差，但是图片分类往往是多分类，这个时候几句要用神经网络了.'''
 from sklearn.svm import SVC
 svc = SVC(C=0.5)
