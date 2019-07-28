@@ -64,4 +64,28 @@ def load_data(filename):
         data = pickle.load(f, encoding='bytes')
         return data[b'data'], data[b'labels']
       
-# 到此，我们写一个类来
+# 到此，我们写一个类来更好的控制我们的数据，以满足接下来训练的需求
+
+class CifarData:
+    def __init__(self, filenames, need_shuffle): # 初始化方法，need_shuffle参数是是否需要打乱我们的数据
+        # 用来特征数据和存标签数据
+        all_data = []
+        all_labels = []
+        # 循环读出文件夹下的文件
+        for filename in filenames:
+           data, labels = load_data(filename)
+           for item, label in zip(data, labels):
+               if label in [0, 1]:  # 取0和1的原因是咱们就只做二分类
+                   all_data.append(item)
+                   all_labels.append(label)
+        self._data = np.vstack(all_data) # 将多个向量合并成矩阵
+        self._data = self._data / 127.5 - 1  # 因为数据是像素，处于0-255之间，归一化使数值分布在-1～1之间
+        self._labels = np.hstack(all_labels)  # 将向量变成多行一列的矩阵
+        # 输出看一看我们的数据量
+        print(self._data.shape)
+        print(self._labels.shape)
+        
+        self._num_examples = self._data.shape[0] # 方便得到数据量
+        self._need_shuffle = need_shuffle  # 将need_shuffle参数存入类中
+        self._indicator = 0  # 
+ 
