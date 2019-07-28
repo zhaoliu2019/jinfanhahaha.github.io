@@ -137,10 +137,42 @@ test_data = CifarData(test_filenames, False) # 测试集不需要打散
 # 初始化模型参数
 init = tf.global_variables_initializer()
 batch_size = 20 # 步长
-train_steps = 10000
-test_steps = 100
+train_steps = 10000 # 训练次数
+test_steps = 100    # 测试次数，因为没有打散操作，次数有上限，因为这个测试集就2000个数据，所以不能超过100次
 
-
+# 接下来，训练模型
+with tf.Session() as sess:
+    # 初始化
+    sess.run(init)
+    # 循环输出
+    for i in range(train_steps):
+        # 得到其中一段训练数据和测试数据
+        batch_data, batch_labels = train_data.next_batch(batch_size)
+        # 调用run方法得到损失函数的值和精准率
+        loss_val, acc_val, _ = sess.run(
+            [loss, accuracy, train_op],
+            feed_dict={
+                x: batch_data,
+                y: batch_labels})
+        # 输出部分中间训练数据
+        if (i+1) % 500 == 0:
+            print('[Train] Step: %d, loss: %4.5f, acc: %4.5f' % (i+1, loss_val, acc_val))
+        # 输出部分测试数据
+        if (i+1) % 5000 == 0:
+            test_data = CifarData(test_filenames, False)
+            all_test_acc_val = []
+            for j in range(test_steps):
+                test_batch_data, test_batch_labels \
+                    = test_data.next_batch(batch_size)
+                test_acc_val = sess.run(
+                    [accuracy],
+                    feed_dict = {
+                        x: test_batch_data, 
+                        y: test_batch_labels
+                    })
+                all_test_acc_val.append(test_acc_val)
+            test_acc = np.mean(all_test_acc_val)
+            print('[Test ] Step: %d, acc: %4.5f' % (i+1, test_acc))
 
 
 
