@@ -34,22 +34,24 @@ b = tf.get_variable('b', [10],
                    initializer=tf.constant_initializer(0.0))
 
 # 根据神经元的公式，我们可以得到y=w·x+b
-y_ = tf.matmul(x,w) + b  # 其中的matmul方法是矩阵相乘
-# 将y_映射到sigmoid函数上
-p_y_1 = tf.nn.sigmoid(y_)
-# 因为y本来的是[1,n]维度的向量，要将它变形成[n,1]维度的矩阵
-y_reshape = tf.reshape(y , (-1,1))
-# 将y_reshape变成float32型的
-y_reshaped_float = tf.cast(y_reshape, tf.float32)
+# [None, 3072] * [3072, 10] = [None, 10]
+y_ = tf.matmul(x, w) + b
 
-'''到此，我们可以得到损失函数了  -> 用MSE表示'''
-loss = tf.reduce_mean(tf.square(y_reshaped_float - p_y_1))
+# [[0.01, 0.9, ..., 0.03], []]
+p_y = tf.nn.softmax(y_)
+# 5 -> [0,0,0,0,0,1,0,0,0,0]
+y_one_hot = tf.one_hot(y, 10, dtype=tf.float32)
+loss = tf.reduce_mean(tf.square(y_one_hot - p_y))
+
+# 交叉熵的损失函数
+# loss = tf.losses.sparse_softmax_cross_entropy(labels=y, logits=y_)
 
 '''我们也可以得到预测值'''
-predict = p_y_1 > 0.5
+predict = tf.argmax(y_, 1)
 
 '''我们还可以得到准确的那几个位置'''
-correct_prediction = tf.equal(tf.cast(predict, tf.int64), y_reshape)
+correct_prediction = tf.equal(predict, y)
+
 
 '''由此，我们可以得到准确率'''
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float64))
