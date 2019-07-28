@@ -175,6 +175,59 @@ with tf.Session() as sess:
             print('[Test ] Step: %d, acc: %4.5f' % (i+1, test_acc))
 
 
+''' 到此，我们就用一个用了逻辑斯蒂的神经元实现了图片二分类，准确率可以达到82%左右'''
+# 换个角度想一想，图片分类能用机器学习吗？抱着试一试的态度，我尝试了以下LogisticRegression，SVC，KNeighborsClassifier
+'''LogisticRegression的准确率可以达到81%多'''
+from sklearn.linear_model import LogisticRegression
+lr = LogisticRegression(penalty='l2' , C = 0.5,solver='sag')
+lr.fit(X_train,y_train)
+lr.score(X_test,y_test)
 
+'''惊讶的来了，我用SVC训练的准确度可以达到86.75%，原理分类图片不一定要用神经网络呢，如果只是二分类图片，
+   传统的机器学习方法并不差，但是图片分类往往是多分类，这个时候几句要用神经网络了.'''
+from sklearn.svm import SVC
+svc = SVC(C=0.5)
+svc.fit(X_train,y_train)
+svc.score(X_test,y_test)
+
+'''又试了试KNN，发现KNN分类图片效果不是特别好，只有63.4%的准确率'''
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=2)
+knn.fit(X_train,y_train)
+knn.score(X_test,y_test)
+
+'''想到二分类图片，传统的机器学习方法不错，试了试集成学习的方法，首先登场的是VotingClassifier'''
+from sklearn.ensemble import VotingClassifier
+from sklearn.tree import DecisionTreeClassifier
+voting_clf = VotingClassifier(estimators=[
+    ('log_clf', LogisticRegression()), 
+    ('svm_clf', SVC(probability=True)),
+    ('dt_clf', DecisionTreeClassifier(random_state=666))],
+                             voting='soft')
+voting_clf.fit(X_train, y_train)
+voting_clf.score(X_test, y_test)
+
+'''接下来登场是bagging中的oob方法'''
+from sklearn.ensemble import BaggingClassifier
+bagging_clf = BaggingClassifier(DecisionTreeClassifier(),
+                               n_estimators=50, max_samples=10,
+                               bootstrap=True, oob_score=True)
+bagging_clf.fit(X_train, y_train)
+bagging_clf.oob_score_
+
+'''AdaBoostClassifier也得看看'''
+from sklearn.ensemble import AdaBoostClassifier
+ada_clf = AdaBoostClassifier(
+    DecisionTreeClassifier(max_depth=2), n_estimators=500)
+ada_clf.fit(X_train, y_train)
+ada_clf.score(X_test, y_test)
+
+'''最后在看一看GradientBoostingClassifier'''
+from sklearn.ensemble import GradientBoostingClassifier
+gb_clf = GradientBoostingClassifier(max_depth=2, n_estimators=30)
+gb_clf.fit(X_train, y_train)
+gb_clf.score(X_test, y_test)
+
+'''奈何数据量有点多，跑的有点慢，代码在这了。拜了个拜'''
 
 
