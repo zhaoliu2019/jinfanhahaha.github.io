@@ -87,5 +87,62 @@ class CifarData:
         
         self._num_examples = self._data.shape[0] # 方便得到数据量
         self._need_shuffle = need_shuffle  # 将need_shuffle参数存入类中
-        self._indicator = 0  # 
- 
+        self._indicator = 0  # 起始位置（头指针），用来保存迭代到哪个位置
+        
+        # 如果传入参数need_shuffle为True，则执行打散操作
+        if self._need_shuffle:
+            self._shuffle_data()
+          
+    # 写私有的混乱函数
+    def _shuffle_data(self):
+        # [0,1,2,3,4,5] -> [5,3,2,4,0,1]
+        # 获取混乱后的索引
+        p = np.random.permutation(self._num_examples)
+        # 更新
+        self._data = self._data[p]
+        self._labels = self._labels[p]
+    
+    # 写一个函数，获得下一批数据
+    def next_batch(self, batch_size):
+        # 计算尾指针的位置
+        end_indicator = self._indicator + batch_size 
+        # 如果尾指针大于数据量
+        if end_indicator > self._num_examples:
+            # 如果self._need_shuffle为True，进行打散操作，若不是，则报错
+            if self._need_shuffle:
+                self._shuffle_data()
+                self._indicator = 0 # 将头指针更新为0
+                end_indicator = batch_size
+            else:
+                raise Exception("have no more examples")
+        # 若尾指针还比数据量大，则说明步长batch_size太大，进行报错
+        if end_indicator > self._num_examples:
+            raise Exception("batch size is larger than all examples")
+        # 获取头指针和尾指针之间的数据
+        batch_data = self._data[self._indicator: end_indicator]
+        batch_labels = self._labels[self._indicator: end_indicator]
+        # 更新头指针
+        self._indicator = end_indicator
+        return batch_data, batch_labels
+
+# 获取训练数据文件名称列表和测试数据文件名称列表
+train_filenames = [os.path.join(CIFAR, 'data_batch_%d' % i) for i in range(1, 6)]
+test_filenames = [os.path.join(CIFAR, 'test_batch')]
+
+# 获取训练数据和测试数据
+train_data = CifarData(train_filenames, True)
+test_data = CifarData(test_filenames, False) # 测试集不需要打散
+
+             '''数据到位，开始训练模型'''
+# 初始化模型参数
+init = tf.global_variables_initializer()
+batch_size = 20 # 步长
+train_steps = 10000
+test_steps = 100
+
+
+
+
+
+
+
