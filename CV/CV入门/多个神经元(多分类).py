@@ -186,14 +186,14 @@ lr.fit(X_train,y_train)
 lr.score(X_test,y_test)
 
 # 接下来，试试大名鼎鼎的SVM算法
-         '''准确率大概在'''
+         '''准确率大概在0.4305，看来看去还是SVM香'''
 from sklearn.svm import SVC
 svc = SVC(C=0.5)
 svc.fit(X_train,y_train)
 svc.score(X_test,y_test)
 
 # 最后试一试KNN算法
-        '''准确率大概在'''
+        '''准确率大概在0.2735。。。'''
 from sklearn.neighbors import KNeighborsClassifier
 knn = KNeighborsClassifier(n_neighbors=2)
 knn.fit(X_train,y_train)
