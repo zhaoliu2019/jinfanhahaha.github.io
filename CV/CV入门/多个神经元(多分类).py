@@ -139,7 +139,7 @@ test_data = CifarData(test_filenames, False) # 测试集不需要打散
 init = tf.global_variables_initializer()
 batch_size = 20 # 步长
 train_steps = 10000 # 训练次数
-test_steps = 100    # 测试次数，因为没有打散操作，次数有上限，因为这个测试集就2000个数据，所以不能超过100次
+test_steps = 100    # 测试次数，因为没有打散操作，次数有上限，因为这个测试集就10000个数据，所以不能超过500次
 
 # 接下来，训练模型
 with tf.Session() as sess:
