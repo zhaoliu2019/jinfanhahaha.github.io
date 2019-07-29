@@ -23,27 +23,17 @@ os.listdir(CIFAR)
 '''好，完成了第一步后，我们开始第二步，用tensorflow来构建我们模型图'''
 # 设我们的x，placeholder方法相当于提供了一个占位符
 x = tf.placeholder(tf.float32, [None, 3072])
-# 设我们的y
+# [None], eg: [0,5,6,3]
 y = tf.placeholder(tf.int64, [None])
-# 接下去，设我们的权值w ， 其中initializer给它加了一个均值为0方差为1的正态分布
-w = tf.get_variable('w', [x.get_shape()[-1], 10],
-                   initializer=tf.random_normal_initializer(0, 1))
-# 再然后，设我们的偏置b,其中的initializer初始化为0.0的值
-b = tf.get_variable('b', [10],
-                   initializer=tf.constant_initializer(0.0))
 
-# 根据神经元的公式，我们可以得到y=w·x+b
-# [None, 3072] * [3072, 10] = [None, 10]
-y_ = tf.matmul(x, w) + b
+# 定义神经网络
+hidden1 = tf.layers.dense(x, 100, activation=tf.nn.relu)
+hidden2 = tf.layers.dense(hidden1, 100, activation=tf.nn.relu)
+hidden3 = tf.layers.dense(hidden2, 50, activation=tf.nn.relu)
+y_ = tf.layers.dense(hidden3, 10)
 
-# [[0.01, 0.9, ..., 0.03], []]
-p_y = tf.nn.softmax(y_)
-# 5 -> [0,0,0,0,0,1,0,0,0,0]
-y_one_hot = tf.one_hot(y, 10, dtype=tf.float32)
-loss = tf.reduce_mean(tf.square(y_one_hot - p_y))
-
-# 交叉熵的损失函数
-# loss = tf.losses.sparse_softmax_cross_entropy(labels=y, logits=y_)
+# 损失函数
+loss = tf.losses.sparse_softmax_cross_entropy(labels=y, logits=y_)
 
 '''我们也可以得到预测值'''
 predict = tf.argmax(y_, 1)
@@ -174,5 +164,4 @@ with tf.Session() as sess:
             test_acc = np.mean(all_test_acc_val)
             print('[Test ] Step: %d, acc: %4.5f' % (i+1, test_acc))
 
-            '''发现损失函数不同，会直接导致预测的准确率不同，以交叉熵为损失函数的预测值大概就是30%左右，
-               而以均方误差的损失函数的准确率可以达到40%，对于多分类图片问题，我试了试传统的机器学习方法。'''
+            '''三层神经网络的准确率可以到达50%以上'''
